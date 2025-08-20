@@ -23,7 +23,7 @@
         th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
         
         /* Admin Dashboard Styles */
-        #adminPanel { min-height: 100vh; display: flex; flex-direction: column; }
+        .admin-panel { min-height: 100vh; display: flex; flex-direction: column; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #0056b3; color: white; }
         .admin-header h2 { margin: 0; color: white; }
         .admin-header .btn-logout { width: auto; padding: 8px 15px; font-size: 14px; }
@@ -33,7 +33,7 @@
         .admin-nav button.active { background-color: #0056b3; }
         .admin-content { display: flex; flex-direction: column; padding: 20px; flex-grow: 1; }
         .admin-page { max-width: 800px; margin: 20px auto; width: 100%; }
-        #searchProfileDisplay { margin-top: 20px; }
+        .search-profile-display { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -250,7 +250,7 @@
             }
             
             const adminPanelHTML = `
-                <div id="adminPanel">
+                <div id="adminPanel" class="admin-panel">
                     <div class="admin-header">
                         <h2>Admin Dashboard</h2>
                         <button onclick="logout()" class="btn-logout">Logout</button>
@@ -295,7 +295,7 @@
                                 <h3>Search Profiles</h3>
                                 <input type="text" id="searchAccNum" placeholder="Enter Account Number">
                                 <button onclick="searchProfile()">Search</button>
-                                <div id="searchProfileDisplay"></div>
+                                <div id="searchProfileDisplay" class="search-profile-display"></div>
                             </div>
                         </div>
                     </div>
@@ -304,9 +304,6 @@
             
             // Insert the admin panel after the admin login panel
             adminLoginPanel.insertAdjacentHTML('afterend', adminPanelHTML);
-            
-            // Show the admin panel
-            document.getElementById('adminPanel').classList.remove('hidden');
         };
 
         // --- Admin Functions ---
