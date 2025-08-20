@@ -3,125 +3,495 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e-Banking System</title>
+    <title>Secure e-Banking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-        .container { max-width: 1200px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .hidden { display: none; }
-        h2, h3, h4 { text-align: center; color: #333; }
-        input, button, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
-        button { background-color: #007BFF; color: white; border: none; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #0056b3; }
-        .btn-secondary { background-color: #6c757d; }
-        .btn-secondary:hover { background-color: #5a6268; }
-        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }
-        .profile-info p { margin: 10px 0; font-size: 1.1em; }
-        .profile-info strong { color: #0056b3; }
-        .customer-nav { display: flex; justify-content: space-around; margin-bottom: 20px; }
-        .customer-nav button { width: 30%; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #004494;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --background: #f4f8fb;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #e6f0f7 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .hidden { 
+            display: none; 
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            text-align: center;
+            padding: 1rem 0;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            margin: 0;
+        }
+        
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2rem;
+            margin: 0;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        
+        .welcome-container {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .welcome-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .panel {
+            padding: 1.5rem;
+        }
+        
+        input, select, button {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 14px;
+            transition: var(--transition);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, var(--secondary), #5a6268);
+        }
+        
+        .btn-success {
+            background: linear-gradient(to right, var(--success), #218838);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(to right, var(--danger), #c82333);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(to right, var(--warning), #e0a800);
+            color: var(--dark);
+        }
+        
+        .section {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            background: white;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e1e8ed;
+        }
+        
+        .section-title i {
+            font-size: 1.4rem;
+        }
+        
+        .profile-info p {
+            margin: 12px 0;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            max-width: 500px;
+        }
+        
+        .profile-info strong {
+            color: var(--primary);
+            min-width: 150px;
+        }
+        
+        .customer-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .customer-nav button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px;
+            border: 1px solid #e1e8ed;
+            text-align: left;
+        }
+        
+        th {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e9ecef;
+        }
         
         /* Admin Dashboard Styles */
-        .admin-panel { min-height: 100vh; display: flex; flex-direction: column; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #0056b3; color: white; }
-        .admin-header h2 { margin: 0; color: white; }
-        .admin-header .btn-logout { width: auto; padding: 8px 15px; font-size: 14px; }
-        .admin-nav { display: flex; justify-content: space-around; background-color: #007BFF; }
-        .admin-nav button { background-color: #007BFF; color: white; border: none; padding: 15px; font-size: 18px; cursor: pointer; transition: background-color 0.3s; }
-        .admin-nav button:hover { background-color: #0056b3; }
-        .admin-nav button.active { background-color: #0056b3; }
-        .admin-content { display: flex; flex-direction: column; padding: 20px; flex-grow: 1; }
-        .admin-page { max-width: 800px; margin: 20px auto; width: 100%; }
-        .search-profile-display { margin-top: 20px; }
+        .admin-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .admin-header h2 {
+            background: none;
+            padding: 0;
+            text-align: left;
+        }
+        
+        .admin-header .btn-logout {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-header .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .admin-nav {
+            display: flex;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        }
+        
+        .admin-nav button {
+            flex: 1;
+            background: transparent;
+            border-radius: 0;
+            border: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .admin-nav button:last-child {
+            border-right: none;
+        }
+        
+        .admin-nav button:hover, .admin-nav button.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .admin-content {
+            padding: 1.5rem;
+        }
+        
+        .admin-page {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .search-profile-display {
+            margin-top: 20px;
+        }
+        
+        .balance-display {
+            text-align: center;
+            font-size: 2rem;
+            margin: 1.5rem 0;
+            color: var(--primary);
+            font-weight: bold;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        
+        .operation-forms {
+            margin-top: 1.5rem;
+        }
+        
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message {
+            background: var(--danger);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        @media (max-width: 768px) {
+            .customer-nav, .admin-nav {
+                flex-direction: column;
+            }
+            
+            .welcome-buttons {
+                flex-direction: column;
+            }
+            
+            .profile-info p {
+                flex-direction: column;
+            }
+            
+            .profile-info strong {
+                margin-bottom: 0.3rem;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-landmark"></i> Secure e-Banking System</h1>
+            <p>Your trusted partner in digital finance</p>
+        </div>
+        
         <div id="landingPage">
-            <h2>Welcome to Our E-Banking System</h2>
-            <p style="text-align: center;">Your trusted partner in digital finance. Please select your login portal to continue.</p>
-            <button onclick="showUserLogin()">User Login</button>
-            <button onclick="showAdminLogin()">Admin Login</button>
+            <div class="welcome-container">
+                <h2>Welcome to Our Banking Portal</h2>
+                <p>Please select your login portal to continue</p>
+                <div class="welcome-buttons">
+                    <button onclick="showUserLogin()"><i class="fas fa-user"></i> User Login</button>
+                    <button onclick="showAdminLogin()"><i class="fas fa-lock"></i> Admin Login</button>
+                </div>
+            </div>
         </div>
 
-        <div id="userLoginPanel" class="hidden">
-            <h2>User Login</h2>
-            <input type="text" id="userLoginId" placeholder="Mobile Number">
-            <input type="password" id="userLoginPin" placeholder="PIN">
-            <button onclick="loginUser()">Login</button>
-            <button class="btn-secondary" onclick="goHome()">Back to Home</button>
+        <div id="userLoginPanel" class="hidden panel">
+            <h2><i class="fas fa-user"></i> User Login</h2>
+            <div class="form-group">
+                <input type="text" id="userLoginId" placeholder="Mobile Number">
+            </div>
+            <div class="form-group">
+                <input type="password" id="userLoginPin" placeholder="PIN">
+            </div>
+            <button onclick="loginUser()"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <button class="btn-secondary" onclick="goHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
         </div>
 
-        <div id="adminLoginPanel" class="hidden">
-            <h2>Admin Login</h2>
-            <input type="text" id="adminLoginId" placeholder="Admin ID">
-            <input type="password" id="adminLoginPassword" placeholder="Password">
-            <button onclick="loginAdmin()">Login</button>
-            <button class="btn-secondary" onclick="goHome()">Back to Home</button>
+        <div id="adminLoginPanel" class="hidden panel">
+            <h2><i class="fas fa-lock"></i> Admin Login</h2>
+            <div class="form-group">
+                <input type="text" id="adminLoginId" placeholder="Admin ID">
+            </div>
+            <div class="form-group">
+                <input type="password" id="adminLoginPassword" placeholder="Password">
+            </div>
+            <button onclick="loginAdmin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <button class="btn-secondary" onclick="goHome()"><i class="fas fa-arrow-left"></i> Back to Home</button>
         </div>
 
         <!-- Admin panel will be dynamically inserted here after successful login -->
 
         <div id="customerPanel" class="hidden">
-            <h2>Customer Dashboard</h2>
-            <p style="text-align: center; font-size: 1.2em;">Welcome, <span id="customerNameDisplay"></span>!</p>
-            <div id="balanceDisplay" style="text-align: center; font-size: 1.5em; margin: 20px 0; color: #007BFF; font-weight: bold;"></div>
+            <h2><i class="fas fa-user-circle"></i> Customer Dashboard</h2>
+            <div class="panel">
+                <p style="text-align: center; font-size: 1.2em;">Welcome, <span id="customerNameDisplay"></span>!</p>
+                <div id="balanceDisplay" class="balance-display"></div>
 
-            <div class="customer-nav">
-                <button onclick="showCustomerView('operations')">Operations</button>
-                <button onclick="showCustomerView('profile')">Profile</button>
-                <button onclick="showCustomerView('history')">History</button>
-            </div>
-
-            <div id="profileView" class="section hidden">
-                <h3>Your Profile</h3>
-                <div class="profile-info">
-                    <p><strong>Name:</strong> <span id="profileName"></span></p>
-                    <p><strong>Account Number:</strong> <span id="profileAccNum"></span></p>
-                    <p><strong>Mobile Number:</strong> <span id="profileMobile"></span></p>
-                    <p><strong>Address:</strong> <span id="profileAddress"></span></p>
-                    <p><strong>Date of Birth:</strong> <span id="profileDob"></span></p>
-                    <p><strong>Aadhar Number:</strong> <span id="profileAadhar"></span></p>
+                <div class="customer-nav">
+                    <button onclick="showCustomerView('operations')"><i class="fas fa-cogs"></i> Operations</button>
+                    <button onclick="showCustomerView('profile')"><i class="fas fa-id-card"></i> Profile</button>
+                    <button onclick="showCustomerView('history')"><i class="fas fa-history"></i> History</button>
                 </div>
-            </div>
 
-            <div id="operationsView" class="section">
-                <h3>Account Operations</h3>
-                <button onclick="toggleOperation('deposit')">Deposit</button>
-                <button onclick="toggleOperation('withdraw')">Withdrawal</button>
-                <button onclick="toggleOperation('transfer')">Transfer</button>
-                
-                <div id="depositForm" class="hidden">
-                    <h4>Deposit Money</h4>
-                    <input type="password" id="depositPin" placeholder="Enter PIN">
-                    <input type="number" id="depositAmount" placeholder="Amount">
-                    <button onclick="depositMoney()">Deposit</button>
+                <div id="profileView" class="section hidden">
+                    <div class="section-title">
+                        <i class="fas fa-id-card"></i>
+                        <h3>Your Profile</h3>
+                    </div>
+                    <div class="profile-info">
+                        <p><strong>Name:</strong> <span id="profileName"></span></p>
+                        <p><strong>Account Number:</strong> <span id="profileAccNum"></span></p>
+                        <p><strong>Mobile Number:</strong> <span id="profileMobile"></span></p>
+                        <p><strong>Address:</strong> <span id="profileAddress"></span></p>
+                        <p><strong>Date of Birth:</strong> <span id="profileDob"></span></p>
+                        <p><strong>Aadhar Number:</strong> <span id="profileAadhar"></span></p>
+                    </div>
                 </div>
-                
-                <div id="withdrawForm" class="hidden">
-                    <h4>Withdraw Money</h4>
-                    <input type="password" id="withdrawPin" placeholder="Enter PIN">
-                    <input type="number" id="withdrawAmount" placeholder="Amount">
-                    <button onclick="withdrawMoney()">Withdraw</button>
-                </div>
-                
-                <div id="transferForm" class="hidden">
-                    <h4>Transfer Money</h4>
-                    <input type="password" id="transferPin" placeholder="Enter PIN">
-                    <input type="text" id="transferAccNum" placeholder="Destination Account Number">
-                    <input type="number" id="transferAmount" placeholder="Amount">
-                    <button onclick="transferMoney()">Transfer</button>
-                </div>
-            </div>
 
-            <div id="historyView" class="section hidden">
-                <h3>Transaction History</h3>
-                <div id="customerTransactionHistoryDisplay"></div>
-            </div>
+                <div id="operationsView" class="section">
+                    <div class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Account Operations</h3>
+                    </div>
+                    <div class="customer-nav">
+                        <button onclick="toggleOperation('deposit')"><i class="fas fa-money-bill-wave"></i> Deposit</button>
+                        <button onclick="toggleOperation('withdraw')"><i class="fas fa-hand-holding-usd"></i> Withdrawal</button>
+                        <button onclick="toggleOperation('transfer')"><i class="fas fa-exchange-alt"></i> Transfer</button>
+                    </div>
+                    
+                    <div class="operation-forms">
+                        <div id="depositForm" class="hidden">
+                            <h4><i class="fas fa-money-bill-wave"></i> Deposit Money</h4>
+                            <div class="form-group">
+                                <input type="password" id="depositPin" placeholder="Enter PIN">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="depositAmount" placeholder="Amount">
+                            </div>
+                            <button onclick="depositMoney()"><i class="fas fa-plus-circle"></i> Deposit</button>
+                        </div>
+                        
+                        <div id="withdrawForm" class="hidden">
+                            <h4><i class="fas fa-hand-holding-usd"></i> Withdraw Money</h4>
+                            <div class="form-group">
+                                <input type="password" id="withdrawPin" placeholder="Enter PIN">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="withdrawAmount" placeholder="Amount">
+                            </div>
+                            <button onclick="withdrawMoney()"><i class="fas fa-minus-circle"></i> Withdraw</button>
+                        </div>
+                        
+                        <div id="transferForm" class="hidden">
+                            <h4><i class="fas fa-exchange-alt"></i> Transfer Money</h4>
+                            <div class="form-group">
+                                <input type="password" id="transferPin" placeholder="Enter PIN">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="transferAccNum" placeholder="Destination Account Number">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="transferAmount" placeholder="Amount">
+                            </div>
+                            <button onclick="transferMoney()"><i class="fas fa-paper-plane"></i> Transfer</button>
+                        </div>
+                    </div>
+                </div>
 
-            <button onclick="logout()">Logout</button>
+                <div id="historyView" class="section hidden">
+                    <div class="section-title">
+                        <i class="fas fa-history"></i>
+                        <h3>Transaction History</h3>
+                    </div>
+                    <div id="customerTransactionHistoryDisplay"></div>
+                </div>
+
+                <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
         </div>
     </div>
 
@@ -252,49 +622,78 @@
             const adminPanelHTML = `
                 <div id="adminPanel" class="admin-panel">
                     <div class="admin-header">
-                        <h2>Admin Dashboard</h2>
-                        <button onclick="logout()" class="btn-logout">Logout</button>
+                        <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                        <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
                     </div>
                     
                     <div class="admin-nav">
-                        <button id="navCreate" onclick="showAdminPage('createAccountPage')">Create New Account</button>
-                        <button id="navTransactions" onclick="showAdminPage('transactionsPage')">View Transactions Report</button>
-                        <button id="navSearch" onclick="showAdminPage('searchProfilesPage')">Search Profiles</button>
+                        <button id="navCreate" onclick="showAdminPage('createAccountPage')"><i class="fas fa-plus-circle"></i> Create Account</button>
+                        <button id="navTransactions" onclick="showAdminPage('transactionsPage')"><i class="fas fa-file-alt"></i> Transactions Report</button>
+                        <button id="navSearch" onclick="showAdminPage('searchProfilesPage')"><i class="fas fa-search"></i> Search Profiles</button>
                     </div>
 
                     <div class="admin-content">
                         <div id="createAccountPage" class="admin-page">
                             <div class="section">
-                                <h3>Create New Account</h3>
-                                <input type="text" id="custName" placeholder="Customer Name">
-                                <input type="text" id="custMobile" placeholder="Mobile Number">
-                                <input type="text" id="custAddress" placeholder="Address">
-                                <label for="custDob">Date of Birth:</label>
-                                <input type="date" id="custDob">
-                                <input type="text" id="custAadhar" placeholder="Aadhar Card Number">
-                                <input type="password" id="custPin" placeholder="Set 4-digit PIN">
-                                <button onclick="createAccount()">Create Account</button>
+                                <div class="section-title">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <h3>Create New Account</h3>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="custName" placeholder="Customer Name">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="custMobile" placeholder="Mobile Number">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="custAddress" placeholder="Address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="custDob">Date of Birth:</label>
+                                    <input type="date" id="custDob">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="custAadhar" placeholder="Aadhar Card Number">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="custPin" placeholder="Set 4-digit PIN">
+                                </div>
+                                <button onclick="createAccount()"><i class="fas fa-user-plus"></i> Create Account</button>
                             </div>
                         </div>
                     
                         <div id="transactionsPage" class="admin-page hidden">
                             <div class="section">
-                                <h3>View Transactions Report</h3>
-                                <input type="text" id="reportAccNum" placeholder="Account Number (Optional)">
-                                <label for="startDate">From Date:</label>
-                                <input type="date" id="startDate">
-                                <label for="endDate">To Date:</label>
-                                <input type="date" id="endDate">
-                                <button onclick="viewTransactions()">Generate Report</button>
+                                <div class="section-title">
+                                    <i class="fas fa-file-alt"></i>
+                                    <h3>View Transactions Report</h3>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="reportAccNum" placeholder="Account Number (Optional)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="startDate">From Date:</label>
+                                    <input type="date" id="startDate">
+                                </div>
+                                <div class="form-group">
+                                    <label for="endDate">To Date:</label>
+                                    <input type="date" id="endDate">
+                                </div>
+                                <button onclick="viewTransactions()"><i class="fas fa-chart-bar"></i> Generate Report</button>
                                 <div id="transactionHistoryDisplay"></div>
                             </div>
                         </div>
                         
                         <div id="searchProfilesPage" class="admin-page hidden">
                             <div class="section">
-                                <h3>Search Profiles</h3>
-                                <input type="text" id="searchAccNum" placeholder="Enter Account Number">
-                                <button onclick="searchProfile()">Search</button>
+                                <div class="section-title">
+                                    <i class="fas fa-search"></i>
+                                    <h3>Search Profiles</h3>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="searchAccNum" placeholder="Enter Account Number">
+                                </div>
+                                <button onclick="searchProfile()"><i class="fas fa-search"></i> Search</button>
                                 <div id="searchProfileDisplay" class="search-profile-display"></div>
                             </div>
                         </div>
