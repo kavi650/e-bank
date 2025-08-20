@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF--8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Banking System</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        h2, h3, h4 { text-align: center; color: #333; }
+        input, button, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        button { background-color: #007BFF; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+        .btn-secondary { background-color: #6c757d; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }
+        .profile-info p { margin: 10px 0; font-size: 1.1em; }
+        .profile-info strong { color: #0056b3; }
+        .customer-nav { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .customer-nav button { width: 30%; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="landingPage">
+            <h2>Welcome to Our E-Banking System</h2>
+            <p style="text-align: center;">Your trusted partner in digital finance. Please select your login portal to continue.</p>
+            <button onclick="showUserLogin()">User Login</button>
+            <button onclick="showAdminLogin()">Admin Login</button>
+        </div>
+
+        <div id="userLoginPanel" class="hidden">
+            <h2>User Login</h2>
+            <input type="text" id="userLoginId" placeholder="Mobile Number">
+            <input type="password" id="userLoginPin" placeholder="PIN">
+            <button onclick="loginUser()">Login</button>
+            <button class="btn-secondary" onclick="goHome()">Back to Home</button>
+        </div>
+
+        <div id="adminLoginPanel" class="hidden">
+            <h2>Admin Login</h2>
+            <input type="text" id="adminLoginId" placeholder="Admin ID">
+            <input type="password" id="adminLoginPassword" placeholder="Password">
+            <button onclick="loginAdmin()">Login</button>
+            <button class="btn-secondary" onclick="goHome()">Back to Home</button>
+        </div>
+
+        <div id="adminPanel" class="hidden">
+            <h2>Admin Dashboard</h2>
+            <p>Welcome, Admin!</p>
+            
+            <div class="section">
+                <h3>Create New Account</h3>
+                <input type="text" id="custName" placeholder="Customer Name">
+                <input type="text" id="custMobile" placeholder="Mobile Number">
+                <input type="text" id="custAddress" placeholder="Address">
+                <input type="date" id="custDob">
+                <input type="text" id="custAadhar" placeholder="Aadhar Card Number">
+                <input type="password" id="custPin" placeholder="Set 4-digit PIN">
+                <button onclick="createAccount()">Create Account</button>
+            </div>
+            
+            <div class="section">
+                <h3>Deposit Money to Account</h3>
+                <input type="text" id="adminDepositAccNum" placeholder="Account Number">
+                <input type="number" id="adminDepositAmount" placeholder="Amount">
+                <button onclick="adminDeposit()">Deposit</button>
+            </div>
+            
+            <div class="section">
+                <h3>View All Accounts</h3>
+                <button onclick="viewAllAccounts()">Show All Accounts</button>
+                <div id="allAccountsDisplay"></div>
+            </div>
+
+            <div class="section">
+                <h3>View All Transactions</h3>
+                <input type="date" id="startDate">
+                <input type="date" id="endDate">
+                <button onclick="viewTransactions()">View Transactions</button>
+                <div id="transactionHistoryDisplay"></div>
+            </div>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <div id="customerPanel" class="hidden">
+            <h2>Customer Dashboard</h2>
+            <p style="text-align: center; font-size: 1.2em;">Welcome, <span id="customerNameDisplay"></span>!</p>
+            <div id="balanceDisplay" style="text-align: center; font-size: 1.5em; margin: 20px 0; color: #007BFF; font-weight: bold;"></div>
+
+            <div class="customer-nav">
+                <button onclick="showCustomerView('operations')">Operations</button>
+                <button onclick="showCustomerView('profile')">Profile</button>
+                <button onclick="showCustomerView('history')">History</button>
+            </div>
+
+            <div id="profileView" class="section hidden">
+                <h3>Your Profile</h3>
+                <div class="profile-info">
+                    <p><strong>Name:</strong> <span id="profileName"></span></p>
+                    <p><strong>Account Number:</strong> <span id="profileAccNum"></span></p>
+                    <p><strong>Mobile Number:</strong> <span id="profileMobile"></span></p>
+                    <p><strong>Address:</strong> <span id="profileAddress"></span></p>
+                    <p><strong>Date of Birth:</strong> <span id="profileDob"></span></p>
+                    <p><strong>Aadhar Number:</strong> <span id="profileAadhar"></span></p>
+                </div>
+            </div>
+
+            <div id="operationsView" class="section">
+                <h3>Account Operations</h3>
+                <button onclick="toggleOperation('deposit')">Deposit</button>
+                <button onclick="toggleOperation('withdraw')">Withdrawal</button>
+                <button onclick="toggleOperation('transfer')">Transfer</button>
+                
+                <div id="depositForm" class="hidden">
+                    <h4>Deposit Money</h4>
+                    <input type="password" id="depositPin" placeholder="Enter PIN">
+                    <input type="number" id="depositAmount" placeholder="Amount">
+                    <button onclick="depositMoney()">Deposit</button>
+                </div>
+                
+                <div id="withdrawForm" class="hidden">
+                    <h4>Withdraw Money</h4>
+                    <input type="password" id="withdrawPin" placeholder="Enter PIN">
+                    <input type="number" id="withdrawAmount" placeholder="Amount">
+                    <button onclick="withdrawMoney()">Withdraw</button>
+                </div>
+                
+                <div id="transferForm" class="hidden">
+                    <h4>Transfer Money</h4>
+                    <input type="password" id="transferPin" placeholder="Enter PIN">
+                    <input type="text" id="transferAccNum" placeholder="Destination Account Number">
+                    <input type="number" id="transferAmount" placeholder="Amount">
+                    <button onclick="transferMoney()">Transfer</button>
+                </div>
+            </div>
+
+            <div id="historyView" class="section hidden">
+                <h3>Transaction History</h3>
+                <div id="customerTransactionHistoryDisplay"></div>
+            </div>
+
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to generate a random 8-digit number for the account
+        const generateAccountNumber = () => Math.floor(10000000 + Math.random() * 90000000).toString();
+
+        // Load data from localStorage or initialize with default values
+        let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        // Save data to localStorage
+        const saveData = () => {
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        };
+
+        // Current logged-in user
+        let currentUser = null;
+
+        // --- DOM Elements ---
+        const landingPage = document.getElementById('landingPage');
+        const userLoginPanel = document.getElementById('userLoginPanel');
+        const adminLoginPanel = document.getElementById('adminLoginPanel');
+        const adminPanel = document.getElementById('adminPanel');
+        const customerPanel = document.getElementById('customerPanel');
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        
+        const allPanels = [landingPage, userLoginPanel, adminLoginPanel, adminPanel, customerPanel];
+
+        // --- Navigation Functions ---
+        const hideAllPanels = () => allPanels.forEach(p => p.classList.add('hidden'));
+
+        const showUserLogin = () => {
+            hideAllPanels();
+            userLoginPanel.classList.remove('hidden');
+        };
+
+        const showAdminLogin = () => {
+            hideAllPanels();
+            adminLoginPanel.classList.remove('hidden');
+        };
+
+        const goHome = () => {
+            hideAllPanels();
+            landingPage.classList.remove('hidden');
+        };
+
+        // --- Login/Logout ---
+        const loginUser = () => {
+            const mobile = document.getElementById('userLoginId').value;
+            const pin = document.getElementById('userLoginPin').value;
+            const user = accounts.find(acc => acc.mobile === mobile && acc.pin === pin);
+
+            if (user) {
+                currentUser = { type: 'customer', data: user };
+                document.getElementById('customerNameDisplay').textContent = user.name;
+                hideAllPanels();
+                customerPanel.classList.remove('hidden');
+                showCustomerView('operations'); // Default to operations view
+                viewBalance();
+                populateProfile();
+            } else {
+                alert('Invalid mobile number or PIN.');
+            }
+        };
+
+        const loginAdmin = () => {
+            const id = document.getElementById('adminLoginId').value;
+            const password = document.getElementById('adminLoginPassword').value;
+
+            if (id === 'admin' && password === 'a123') {
+                currentUser = { type: 'admin' };
+                hideAllPanels();
+                adminPanel.classList.remove('hidden');
+            } else {
+                alert('Invalid admin credentials.');
+            }
+        };
+
+        const logout = () => {
+            currentUser = null;
+            document.getElementById('userLoginId').value = '';
+            document.getElementById('userLoginPin').value = '';
+            document.getElementById('adminLoginId').value = '';
+            document.getElementById('adminLoginPassword').value = '';
+            goHome();
+        };
+
+        // --- Admin Functions ---
+        const createAccount = () => {
+            const name = document.getElementById('custName').value;
+            const mobile = document.getElementById('custMobile').value;
+            const address = document.getElementById('custAddress').value;
+            const dob = document.getElementById('custDob').value;
+            const aadhar = document.getElementById('custAadhar').value;
+            const pin = document.getElementById('custPin').value;
+
+            if (!name || !mobile || !address || !dob || !aadhar || !pin) {
+                alert('Please fill all fields.');
+                return;
+            }
+            if (pin.length !== 4 || isNaN(pin)) {
+                alert('PIN must be a 4-digit number.');
+                return;
+            }
+            if (accounts.some(acc => acc.mobile === mobile)) {
+                alert('Account with this mobile number already exists.');
+                return;
+            }
+            const accountNumber = generateAccountNumber();
+            const newAccount = { name, mobile, address, dob, aadhar, accountNumber, pin, balance: 0 };
+            accounts.push(newAccount);
+            saveData();
+            alert(`Account created successfully!\nAccount Number: ${accountNumber}\nPIN: ${pin}`);
+            // Clear input fields
+            document.getElementById('custName').value = '';
+            document.getElementById('custMobile').value = '';
+            document.getElementById('custAddress').value = '';
+            document.getElementById('custDob').value = '';
+            document.getElementById('custAadhar').value = '';
+            document.getElementById('custPin').value = '';
+        };
+        
+        const adminDeposit = () => {
+            const accNum = document.getElementById('adminDepositAccNum').value;
+            const amount = parseFloat(document.getElementById('adminDepositAmount').value);
+
+            if (!accNum || isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid account number and amount.');
+                return;
+            }
+            const account = accounts.find(acc => acc.accountNumber === accNum);
+            if (!account) {
+                alert('Account not found.');
+                return;
+            }
+            account.balance += amount;
+            recordTransaction('admin-deposit', amount, accNum);
+            saveData();
+            alert(`₹${amount} deposited into account ${accNum} successfully.`);
+            document.getElementById('adminDepositAccNum').value = '';
+            document.getElementById('adminDepositAmount').value = '';
+        };
+
+        const viewAllAccounts = () => {
+            const displayDiv = document.getElementById('allAccountsDisplay');
+            if (accounts.length === 0) {
+                displayDiv.innerHTML = '<p>No accounts have been created yet.</p>';
+                return;
+            }
+            let tableHtml = '<table><tr><th>Name</th><th>Mobile</th><th>Account Number</th><th>PIN</th><th>Balance</th></tr>';
+            accounts.forEach(acc => {
+                tableHtml += `<tr><td>${acc.name}</td><td>${acc.mobile}</td><td>${acc.accountNumber}</td><td>${acc.pin}</td><td>₹${acc.balance.toFixed(2)}</td></tr>`;
+            });
+            tableHtml += '</table>';
+            displayDiv.innerHTML = tableHtml;
+        };
+
+        const viewTransactions = () => {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const displayDiv = document.getElementById('transactionHistoryDisplay');
+            if(!document.getElementById('startDate').value || !document.getElementById('endDate').value) {
+                alert("Please select a start and end date.");
+                return;
+            }
+            const filteredTransactions = transactions.filter(tx => {
+                const txDate = new Date(tx.date);
+                return txDate >= startDate && txDate <= endDate;
+            });
+            displayTransactions(filteredTransactions, displayDiv);
+        };
+
+        // --- Customer Functions ---
+        const showCustomerView = (viewName) => {
+            document.getElementById('operationsView').classList.add('hidden');
+            document.getElementById('profileView').classList.add('hidden');
+            document.getElementById('historyView').classList.add('hidden');
+
+            document.getElementById(`${viewName}View`).classList.remove('hidden');
+
+            if(viewName === 'history') {
+                viewCustomerTransactions();
+            }
+        };
+
+        const populateProfile = () => {
+            const user = currentUser.data;
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileAccNum').textContent = user.accountNumber;
+            document.getElementById('profileMobile').textContent = user.mobile;
+            document.getElementById('profileAddress').textContent = user.address;
+            document.getElementById('profileDob').textContent = user.dob;
+            document.getElementById('profileAadhar').textContent = user.aadhar;
+        };
+
+        const toggleOperation = (op) => {
+            document.getElementById('depositForm').classList.add('hidden');
+            document.getElementById('withdrawForm').classList.add('hidden');
+            document.getElementById('transferForm').classList.add('hidden');
+            document.getElementById(`${op}Form`).classList.remove('hidden');
+        };
+
+        const viewBalance = () => {
+            const customer = accounts.find(acc => acc.accountNumber === currentUser.data.accountNumber);
+            currentUser.data = customer; // Refresh current user data
+            balanceDisplay.textContent = `Current Balance: ₹${customer.balance.toFixed(2)}`;
+        };
+
+        const recordTransaction = (type, amount, toAccNum = null, fromAccNum = null) => {
+            transactions.push({
+                date: new Date().toISOString().split('T')[0],
+                type,
+                amount,
+                fromAccount: fromAccNum,
+                toAccount: toAccNum
+            });
+            saveData();
+        };
+
+        const depositMoney = () => {
+            const pin = document.getElementById('depositPin').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const customer = accounts.find(acc => acc.accountNumber === currentUser.data.accountNumber);
+
+            if (pin !== customer.pin) {
+                alert('Invalid PIN.');
+                return;
+            }
+            if (isNaN(amount) || amount <= 0) {
+                alert('Invalid amount.');
+                return;
+            }
+            customer.balance += amount;
+            recordTransaction('deposit', amount, customer.accountNumber);
+            saveData();
+            alert(`₹${amount} deposited successfully.`);
+            viewBalance();
+            document.getElementById('depositPin').value = '';
+            document.getElementById('depositAmount').value = '';
+        };
+
+        const withdrawMoney = () => {
+            const pin = document.getElementById('withdrawPin').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const customer = accounts.find(acc => acc.accountNumber === currentUser.data.accountNumber);
+
+            if (pin !== customer.pin) {
+                alert('Invalid PIN.');
+                return;
+            }
+            if (isNaN(amount) || amount <= 0 || amount > customer.balance) {
+                alert('Invalid amount or insufficient balance.');
+                return;
+            }
+            customer.balance -= amount;
+            recordTransaction('withdrawal', amount, null, customer.accountNumber);
+            saveData();
+            alert(`₹${amount} withdrawn successfully.`);
+            viewBalance();
+            document.getElementById('withdrawPin').value = '';
+            document.getElementById('withdrawAmount').value = '';
+        };
+
+        const transferMoney = () => {
+            const pin = document.getElementById('transferPin').value;
+            const toAccNum = document.getElementById('transferAccNum').value;
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const fromAcc = accounts.find(acc => acc.accountNumber === currentUser.data.accountNumber);
+            
+            if (pin !== fromAcc.pin) {
+                alert('Invalid PIN.');
+                return;
+            }
+            if (fromAcc.accountNumber === toAccNum) {
+                alert("You cannot transfer money to your own account.");
+                return;
+            }
+            
+            const toAcc = accounts.find(acc => acc.accountNumber === toAccNum);
+
+            if (!toAcc) {
+                alert('Destination account not found.');
+                return;
+            }
+            if (isNaN(amount) || amount <= 0 || amount > fromAcc.balance) {
+                alert('Invalid amount or insufficient balance.');
+                return;
+            }
+
+            fromAcc.balance -= amount;
+            toAcc.balance += amount;
+            recordTransaction('transfer', amount, toAccNum, fromAcc.accountNumber);
+            saveData();
+            alert(`₹${amount} transferred successfully to account ${toAccNum}.`);
+            viewBalance();
+            document.getElementById('transferPin').value = '';
+            document.getElementById('transferAccNum').value = '';
+            document.getElementById('transferAmount').value = '';
+        };
+
+        const viewCustomerTransactions = () => {
+            const userTransactions = transactions.filter(tx => 
+                tx.fromAccount === currentUser.data.accountNumber || tx.toAccount === currentUser.data.accountNumber
+            );
+            displayTransactions(userTransactions, document.getElementById('customerTransactionHistoryDisplay'));
+        };
+
+        // --- Utility Function ---
+        const displayTransactions = (txList, element) => {
+            if (txList.length === 0) {
+                element.innerHTML = '<p>No transactions found.</p>';
+                return;
+            }
+            let tableHtml = '<table><tr><th>Date</th><th>Type</th><th>Amount</th><th>Details</th></tr>';
+            txList.forEach(tx => {
+                let details = '';
+                if (tx.type === 'transfer') {
+                    details = `From: ${tx.fromAccount} To: ${tx.toAccount}`;
+                } else if (['admin-deposit', 'deposit'].includes(tx.type)) {
+                    details = `To: ${tx.toAccount}`;
+                } else if (tx.type === 'withdrawal') {
+                    details = `From: ${tx.fromAccount}`;
+                }
+                tableHtml += `<tr><td>${tx.date}</td><td>${tx.type}</td><td>₹${tx.amount.toFixed(2)}</td><td>${details}</td></tr>`;
+            });
+            tableHtml += '</table>';
+            element.innerHTML = tableHtml;
+        };
+    </script>
+</body>
+</html>
