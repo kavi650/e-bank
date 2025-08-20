@@ -62,56 +62,7 @@
             <button class="btn-secondary" onclick="goHome()">Back to Home</button>
         </div>
 
-        <div id="adminPanel" class="hidden">
-            <div class="admin-header">
-                <h2>Admin Dashboard</h2>
-                <button onclick="logout()" class="btn-logout">Logout</button>
-            </div>
-            
-            <div class="admin-nav">
-                <button id="navCreate" onclick="showAdminPage('createAccountPage')">Create New Account</button>
-                <button id="navTransactions" onclick="showAdminPage('transactionsPage')">View Transactions Report</button>
-                <button id="navSearch" onclick="showAdminPage('searchProfilesPage')">Search Profiles</button>
-            </div>
-
-            <div class="admin-content">
-                <div id="createAccountPage" class="admin-page">
-                    <div class="section">
-                        <h3>Create New Account</h3>
-                        <input type="text" id="custName" placeholder="Customer Name">
-                        <input type="text" id="custMobile" placeholder="Mobile Number">
-                        <input type="text" id="custAddress" placeholder="Address">
-                        <label for="custDob">Date of Birth:</label>
-                        <input type="date" id="custDob">
-                        <input type="text" id="custAadhar" placeholder="Aadhar Card Number">
-                        <input type="password" id="custPin" placeholder="Set 4-digit PIN">
-                        <button onclick="createAccount()">Create Account</button>
-                    </div>
-                </div>
-            
-                <div id="transactionsPage" class="admin-page hidden">
-                    <div class="section">
-                        <h3>View Transactions Report</h3>
-                        <input type="text" id="reportAccNum" placeholder="Account Number (Optional)">
-                        <label for="startDate">From Date:</label>
-                        <input type="date" id="startDate">
-                        <label for="endDate">To Date:</label>
-                        <input type="date" id="endDate">
-                        <button onclick="viewTransactions()">Generate Report</button>
-                        <div id="transactionHistoryDisplay"></div>
-                    </div>
-                </div>
-                
-                <div id="searchProfilesPage" class="admin-page hidden">
-                    <div class="section">
-                        <h3>Search Profiles</h3>
-                        <input type="text" id="searchAccNum" placeholder="Enter Account Number">
-                        <button onclick="searchProfile()">Search</button>
-                        <div id="searchProfileDisplay"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Admin panel will be dynamically inserted here after successful login -->
 
         <div id="customerPanel" class="hidden">
             <h2>Customer Dashboard</h2>
@@ -195,11 +146,11 @@
         const landingPage = document.getElementById('landingPage');
         const userLoginPanel = document.getElementById('userLoginPanel');
         const adminLoginPanel = document.getElementById('adminLoginPanel');
-        const adminPanel = document.getElementById('adminPanel');
         const customerPanel = document.getElementById('customerPanel');
         const balanceDisplay = document.getElementById('balanceDisplay');
+        const container = document.querySelector('.container');
         
-        const allPanels = [landingPage, userLoginPanel, adminLoginPanel, adminPanel, customerPanel];
+        const allPanels = [landingPage, userLoginPanel, adminLoginPanel, customerPanel];
         const adminPages = ['createAccountPage', 'transactionsPage', 'searchProfilesPage'];
         const adminNavButtons = ['navCreate', 'navTransactions', 'navSearch'];
 
@@ -219,13 +170,25 @@
         const goHome = () => {
             hideAllPanels();
             landingPage.classList.remove('hidden');
+            
+            // Remove admin panel if it exists
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) {
+                adminPanel.remove();
+            }
         };
 
         const showAdminPage = (pageId) => {
-            adminPages.forEach(p => document.getElementById(p).classList.add('hidden'));
+            adminPages.forEach(p => {
+                const page = document.getElementById(p);
+                if (page) page.classList.add('hidden');
+            });
             document.getElementById(pageId).classList.remove('hidden');
             
-            adminNavButtons.forEach(btn => document.getElementById(btn).classList.remove('active'));
+            adminNavButtons.forEach(btn => {
+                const button = document.getElementById(btn);
+                if (button) button.classList.remove('active');
+            });
             document.getElementById(`nav${pageId.replace('Page', '')}`).classList.add('active');
         };
         
@@ -255,7 +218,7 @@
             if (id === 'admin' && password === 'a123') {
                 currentUser = { type: 'admin' };
                 hideAllPanels();
-                adminPanel.classList.remove('hidden');
+                createAdminPanel();
                 showAdminPage('createAccountPage');
             } else {
                 alert('Invalid admin credentials.');
@@ -268,7 +231,82 @@
             document.getElementById('userLoginPin').value = '';
             document.getElementById('adminLoginId').value = '';
             document.getElementById('adminLoginPassword').value = '';
+            
+            // Remove admin panel if it exists
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) {
+                adminPanel.remove();
+            }
+            
             goHome();
+        };
+
+        // Function to create admin panel dynamically
+        const createAdminPanel = () => {
+            // Remove existing admin panel if any
+            const existingAdminPanel = document.getElementById('adminPanel');
+            if (existingAdminPanel) {
+                existingAdminPanel.remove();
+            }
+            
+            const adminPanelHTML = `
+                <div id="adminPanel">
+                    <div class="admin-header">
+                        <h2>Admin Dashboard</h2>
+                        <button onclick="logout()" class="btn-logout">Logout</button>
+                    </div>
+                    
+                    <div class="admin-nav">
+                        <button id="navCreate" onclick="showAdminPage('createAccountPage')">Create New Account</button>
+                        <button id="navTransactions" onclick="showAdminPage('transactionsPage')">View Transactions Report</button>
+                        <button id="navSearch" onclick="showAdminPage('searchProfilesPage')">Search Profiles</button>
+                    </div>
+
+                    <div class="admin-content">
+                        <div id="createAccountPage" class="admin-page">
+                            <div class="section">
+                                <h3>Create New Account</h3>
+                                <input type="text" id="custName" placeholder="Customer Name">
+                                <input type="text" id="custMobile" placeholder="Mobile Number">
+                                <input type="text" id="custAddress" placeholder="Address">
+                                <label for="custDob">Date of Birth:</label>
+                                <input type="date" id="custDob">
+                                <input type="text" id="custAadhar" placeholder="Aadhar Card Number">
+                                <input type="password" id="custPin" placeholder="Set 4-digit PIN">
+                                <button onclick="createAccount()">Create Account</button>
+                            </div>
+                        </div>
+                    
+                        <div id="transactionsPage" class="admin-page hidden">
+                            <div class="section">
+                                <h3>View Transactions Report</h3>
+                                <input type="text" id="reportAccNum" placeholder="Account Number (Optional)">
+                                <label for="startDate">From Date:</label>
+                                <input type="date" id="startDate">
+                                <label for="endDate">To Date:</label>
+                                <input type="date" id="endDate">
+                                <button onclick="viewTransactions()">Generate Report</button>
+                                <div id="transactionHistoryDisplay"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="searchProfilesPage" class="admin-page hidden">
+                            <div class="section">
+                                <h3>Search Profiles</h3>
+                                <input type="text" id="searchAccNum" placeholder="Enter Account Number">
+                                <button onclick="searchProfile()">Search</button>
+                                <div id="searchProfileDisplay"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Insert the admin panel after the admin login panel
+            adminLoginPanel.insertAdjacentHTML('afterend', adminPanelHTML);
+            
+            // Show the admin panel
+            document.getElementById('adminPanel').classList.remove('hidden');
         };
 
         // --- Admin Functions ---
